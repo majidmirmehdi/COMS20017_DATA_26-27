@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMS20017 — DATA · Algorithms &amp; Data, TB1 25/26</title>
+<meta name="description" content="Course site for the Data part of COMS20017 Algorithms & Data, University of Bristol, TB1 2025/26.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500;1,6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEAE0;
+    --paper-card:#E4DDC9;
+    --paper-card-2:#E9E3D2;
+    --ink:#1C2B39;
+    --ink-soft:#51606d;
+    --ink-faint:#8a8f80;
+    --rule:#c9c2ac;
+    --amber:#a8702a;
+    --amber-bg:#e7d3ae;
+    --teal:#3e6e68;
+    --teal-bg:#c7dbd4;
+    --mute:#8d8878;
+    --mute-bg:#dcd7c5;
+    --max:920px;
+    --radius:3px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  ::selection{ background:var(--amber); color:var(--paper); }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  h1,h2,h3{
+    font-family:'Newsreader', serif;
+    font-weight:500;
+    margin:0;
+  }
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px;
+    background:rgba(238,234,224,0.86);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+    font-weight:600;
+  }
+  .nav-mark span{ color:var(--amber); }
+  .nav-links{
+    display:flex; gap:22px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .nav-links a{ text-decoration:none; color:var(--ink-soft); border-bottom:1px solid transparent; padding-bottom:2px; transition:color .15s, border-color .15s; }
+  .nav-links a:hover{ color:var(--ink); border-color:var(--amber); }
+  @media (max-width:640px){ .nav-links{ gap:14px; } .nav-links a:nth-child(4){ display:none; } }
+
+  /* ---------- Hero ---------- */
+  .hero{ position:relative; overflow:hidden; padding:64px 28px 0; }
+  .hero-inner{ max-width:var(--max); margin:0 auto; position:relative; z-index:2; }
+  .hero h1{
+    font-size:clamp(3.4rem, 11vw, 6.4rem);
+    line-height:0.92;
+    margin-top:14px;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{ font-style:italic; color:var(--amber); }
+  .hero-sub{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-style:normal;
+    font-size:0.9rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-top:14px;
+  }
+  .hero-desc{
+    max-width:46ch;
+    margin:22px 0 0;
+    color:var(--ink-soft);
+    font-size:1.02rem;
+  }
+  .hero-meta{
+    margin:26px 0 0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    color:var(--ink);
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero-meta .dot{ width:4px; height:4px; border-radius:50%; background:var(--ink-faint); }
+  .hero-wave{ display:block; width:100%; height:150px; margin-top:34px; }
+  @media (prefers-reduced-motion: reduce){ .hero-wave{ height:120px; } }
+
+  /* ---------- Sections ---------- */
+  .block{ max-width:var(--max); margin:0 auto; padding:64px 28px; }
+  .block + .block{ border-top:1px solid var(--rule); }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:30px; flex-wrap:wrap; }
+  .section-label{ font-size:1.9rem; }
+  .section-note{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.08em; }
+
+  .legend{ display:flex; gap:18px; font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft); align-items:center; }
+  .legend i{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+  .legend .amber-dot{ background:var(--amber); }
+  .legend .teal-dot{ background:var(--teal); }
+  .legend .mute-dot{ background:var(--mute); }
+
+  /* ---------- Cards ---------- */
+  .card-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--rule); border:1px solid var(--rule); }
+  @media (max-width:680px){ .card-grid{ grid-template-columns:1fr; } }
+  .card{ background:var(--paper-card); padding:26px 26px 24px; }
+  .card h3{ font-size:1.15rem; margin-bottom:14px; }
+  .card p, .card li{ font-size:0.94rem; color:var(--ink-soft); }
+  .card ul{ margin:0; padding-left:0; list-style:none; }
+  .card li{ padding:6px 0; border-top:1px solid rgba(28,43,57,0.08); }
+  .card li:first-child{ border-top:none; }
+  .tag{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; color:var(--ink); background:var(--amber-bg); padding:1px 6px; border-radius:2px; margin-right:8px; }
+
+  /* ---------- Staff ---------- */
+  .staff-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:32px; }
+  @media (max-width:680px){ .staff-grid{ grid-template-columns:1fr; } }
+  .person{ padding:20px; border:1px solid var(--rule); border-left:3px solid var(--amber); }
+  .person.teal{ border-left-color:var(--teal); }
+  .person .role{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); }
+  .person h3{ font-size:1.2rem; margin:4px 0 6px; }
+  .person a{ font-size:0.86rem; color:var(--ink-soft); text-decoration:none; border-bottom:1px dotted var(--ink-faint); }
+
+  .ta-list{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--ink-soft); line-height:2; }
+  .contact-strip{ margin-top:26px; padding:18px 20px; background:var(--paper-card-2); border:1px solid var(--rule); font-size:0.9rem; color:var(--ink-soft); }
+  .contact-strip a{ color:var(--ink); }
+
+  /* ---------- Exam ---------- */
+  .exam-list{ list-style:none; margin:0; padding:0; display:grid; gap:12px; }
+  .exam-list li{ padding-left:20px; position:relative; font-size:0.94rem; color:var(--ink-soft); }
+  .exam-list li::before{ content:"—"; position:absolute; left:0; color:var(--amber); }
+
+  table{ width:100%; border-collapse:collapse; font-size:0.9rem; margin-top:10px; }
+  th, td{ text-align:left; padding:11px 10px; border-bottom:1px solid var(--rule); }
+  th{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--ink-faint); font-weight:500; }
+  td.year{ font-family:'IBM Plex Mono', monospace; font-weight:600; }
+  td a{ text-decoration:none; color:var(--ink); border-bottom:1px solid var(--amber); }
+  td.ignore{ font-family:'IBM Plex Mono', monospace; color:var(--ink-faint); font-size:0.82rem; }
+
+  /* ---------- Timeline ---------- */
+  .timeline{ position:relative; }
+  .timeline::before{ content:""; position:absolute; left:52px; top:6px; bottom:6px; width:1px; background:var(--rule); }
+  @media (max-width:600px){ .timeline::before{ left:26px; } }
+
+  .block-title{ font-family:'IBM Plex Mono', monospace; font-size:0.74rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink); margin:40px 0 18px 84px; }
+  @media (max-width:600px){ .block-title{ margin-left:48px; } }
+  .block-title:first-child{ margin-top:0; }
+  .block-title .who{ color:var(--ink-faint); text-transform:none; letter-spacing:0; }
+
+  .week{ display:grid; grid-template-columns:104px 1fr; gap:0; position:relative; margin-bottom:6px; }
+  @media (max-width:600px){ .week{ grid-template-columns:56px 1fr; } }
+  .week-num{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem; font-weight:600;
+    padding:14px 0; position:relative; text-align:right; padding-right:22px; color:var(--ink-soft);
+  }
+  .week-num::after{
+    content:""; position:absolute; right:-5px; top:19px; width:9px; height:9px; border-radius:50%;
+    background:var(--mute); border:2px solid var(--paper);
+  }
+  .week[data-accent="amber"] .week-num::after{ background:var(--amber); }
+  .week[data-accent="teal"] .week-num::after{ background:var(--teal); }
+  .week-content{ padding:14px 0 22px 26px; border-bottom:1px solid rgba(28,43,57,0.07); }
+  .week:last-child .week-content{ border-bottom:none; }
+  .week-date{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-faint); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.04em; }
+  .week-items{ list-style:none; margin:0; padding:0; display:grid; gap:7px; }
+  .week-items li{ font-size:0.92rem; }
+  .week-items a{ text-decoration:none; display:inline-flex; align-items:center; gap:8px; color:var(--ink); }
+  .week-items a:hover .code{ background:var(--ink); color:var(--paper); }
+  .week-items a:hover span.label{ border-color:var(--ink); }
+  .week-items span.label{ border-bottom:1px solid transparent; transition:border-color .15s; }
+  .week-items .note{ color:var(--ink-soft); font-style:italic; }
+  .code{
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; font-weight:600;
+    background:var(--amber-bg); color:var(--ink); padding:2px 6px; border-radius:2px; flex:none;
+    transition:background .15s, color .15s;
+  }
+  .week[data-accent="teal"] .code{ background:var(--teal-bg); }
+  .week[data-accent="mute"] .code{ background:var(--mute-bg); }
+
+  /* ---------- Footer ---------- */
+  footer{ max-width:var(--max); margin:0 auto; padding:40px 28px 70px; border-top:1px solid var(--rule); }
+  footer .foot-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
+  footer .eyebrow{ margin-bottom:4px; }
+  footer a.repo-link{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; text-decoration:none; color:var(--ink-soft); border-bottom:1px dotted var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-mark">COMS20017<span> · DATA</span></div>
+  <div class="nav-links">
+    <a href="#schedule">Schedule</a>
+    <a href="#staff">Staff</a>
+    <a href="#exam">Exam</a>
+    <a href="#weeks">Weeks</a>
+    <a href="#papers">Past Papers</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Algorithms &amp; Data · TB1 · 2025/26 · University of Bristol</p>
+    <h1>Data<span class="hero-sub">how to reason with it</span></h1>
+    <p class="hero-desc">The data half of Algorithms &amp; Data — sampling and distance, estimation and inference, regression and classification, and the features that make a signal legible.</p>
+    <div class="hero-meta"><span>Majid Mirmehdi</span><span class="dot"></span><span>Alin Achim</span><span class="dot"></span><span>12 weeks</span></div>
+  </div>
+  <canvas id="wave" class="hero-wave" aria-hidden="true"></canvas>
+</header>
+
+<section id="schedule" class="block">
+  <div class="section-head">
+    <h2 class="section-label">Schedule</h2>
+    <span class="section-note">Weeks 1–5, 7–12 · no lectures wk 6</span>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>Lectures</h3>
+      <ul>
+        <li><span class="tag">MON</span>4pm — Physics Building, G42 Powell</li>
+        <li><span class="tag">THU</span>2pm — Queens Building, 1.40 Pugsley</li>
+      </ul>
+      <p style="margin-top:12px;">Recordings appear on Blackboard a few hours after each lecture — use Replay in the left‑hand menu of the course page.</p>
+    </div>
+    <div class="card">
+      <h3>Labs</h3>
+      <ul>
+        <li><span class="tag">GRP 1</span>Fri 11:00–12:00 — Queens Building, 1.80</li>
+        <li><span class="tag">GRP 2</span>Fri 12:00–13:00 — Queens Building, 1.80</li>
+      </ul>
+      <p style="margin-top:12px;">Check Outlook to see which group you're in. New exercises release every two weeks as Python notebooks — four sets in total, in <code>/Labs</code>. Answers land in time for the second session. Lab material may appear in the exam, and labs are the main channel for feedback on lectures, sheets, and exams alike.</p>
+    </div>
+  </div>
+</section>
+
+<section id="staff" class="block">
+  <div class="section-head">
+    <h2 class="section-label">Staff</h2>
+  </div>
+  <div class="staff-grid">
+    <div class="person">
+      <div class="role">Unit director · Weeks 1–2, 8–10</div>
+      <h3>Majid Mirmehdi</h3>
+      <a href="http://people.cs.bris.ac.uk/~majid/">people.cs.bris.ac.uk/~majid</a><br>
+      <a href="mailto:m.mirmehdi@bristol.ac.uk">m.mirmehdi@bristol.ac.uk</a>
+    </div>
+    <div class="person teal">
+      <div class="role">Weeks 3–7</div>
+      <h3>Alin Achim</h3>
+      <a href="https://amachim.blogs.bristol.ac.uk/">amachim.blogs.bristol.ac.uk</a><br>
+      <a href="mailto:alin.achim@bristol.ac.uk">alin.achim@bristol.ac.uk</a>
+    </div>
+  </div>
+  <h3 style="font-size:1rem; margin-bottom:10px;">Teaching assistants</h3>
+  <p class="ta-list">Eddie Goodings · Jordan Frost · Ava Raisian · Archie Walton · Yu Qin · Xinyi Zheng · Conor O'Sullivan · Lexing Zhou</p>
+  <div class="contact-strip">
+    Questions on any part of the unit go on the <a href="https://teams.microsoft.com/l/channel/19%3Avgs9mp3x4IUWyg7sP4Xqra9OLBtg5k8xQstCtIerRNI1%40thread.tacv2/General?groupId=afb514d3-f58e-4fef-a26f-8db851c3654a&tenantId=b2e47f30-cd7d-4a4e-a5da-b18cf1a4151b">Teams channel</a> — turn notifications on. Individual emails and DMs on one-to-one queries usually won't get a reply; posting publicly means everyone benefits from the answer. No access? Contact <a href="mailto:coms-student-enquiries@bristol.ac.uk">COMS Student Enquiries</a>.
+  </div>
+</section>
+
+<section id="exam" class="block">
+  <div class="section-head">
+    <h2 class="section-label">Exam info</h2>
+    <span class="section-note">100% of the data unit mark</span>
+  </div>
+  <ul class="exam-list">
+    <li>Closed book — no additional materials, and no formula sheet will be provided.</li>
+    <li>Assessed entirely by multiple-choice exam.</li>
+    <li>Alternative exam arrangements go through <a href="mailto:coms-student-enquiries@bristol.ac.uk">COMS Student Enquiries</a>.</li>
+    <li>The course content has shifted over the past couple of years, so some past-paper questions no longer apply — these are redacted below and listed under "ignore."</li>
+    <li>Two of the past papers were sat under the unit's earlier code, COMS20011.</li>
+    <li>Spot something off in a paper? Flag it on the Teams channel.</li>
+  </ul>
+</section>
+
+<section id="weeks" class="block">
+  <div class="section-head">
+    <h2 class="section-label">Weekly materials</h2>
+    <div class="legend"><span><i class="amber-dot"></i>Majid</span><span><i class="teal-dot"></i>Alin</span><span><i class="mute-dot"></i>no lecture</span></div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="block-title">Introduction, data measures &amp; other characteristics <span class="who">— Majid</span></div>
+
+    <div class="week" data-accent="amber">
+      <div class="week-num">W01</div>
+      <div class="week-content">
+        <div class="week-date">22 Sep 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-MMLec01.pdf"><span class="code">MM01</span><span class="label">Intro to COMS20017 — a bit fishy!</span></a></li>
+          <li><a href="Slides/COMS20017-MMLec02.pdf"><span class="code">MM02</span><span class="label">Sampling, distance measures</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-MM01.pdf"><span class="code">PS01</span><span class="label">Problem sheet (self/group study)</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-MM01-Solutions.pdf"><span class="code">PS01</span><span class="label">Problem sheet — solutions</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="amber">
+      <div class="week-num">W02</div>
+      <div class="week-content">
+        <div class="week-date">29 Sep 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-MMLec03.pdf"><span class="code">MM03</span><span class="label">Covariance, eigen analysis, etc.</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-MM02.pdf"><span class="code">PS02</span><span class="label">Problem sheet (self/group study)</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-MM02-Solutions.pdf"><span class="code">PS02</span><span class="label">Problem sheet — solutions</span></a></li>
+          <li><a href="Slides/COMS20017-AALec01.pdf"><span class="code">AA01</span><span class="label">Intro to estimation theory</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block-title">Estimation, regression &amp; classification <span class="who">— Alin</span></div>
+
+    <div class="week" data-accent="teal">
+      <div class="week-num">W03</div>
+      <div class="week-content">
+        <div class="week-date">6 Oct 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-AALec02.pdf"><span class="code">AA02</span><span class="label">Linear algebra basics, stochastic processes</span></a></li>
+          <li><a href="Notes/Maths_prereqs.pdf"><span class="code">NOTE</span><span class="label">More mathematical preliminaries</span></a></li>
+          <li><a href="Slides/COMS20017-AALec03.pdf"><span class="code">AA03</span><span class="label">MVUE &amp; CRLB</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-AA01.pdf"><span class="code">PS</span><span class="label">Problem sheet — parameter estimation</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="teal">
+      <div class="week-num">W04</div>
+      <div class="week-content">
+        <div class="week-date">13 Oct 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-AALec04.pdf"><span class="code">AA04</span><span class="label">Maximum likelihood estimation (MLE)</span></a></li>
+          <li><a href="Slides/COMS20017-AALec05.pdf"><span class="code">AA05</span><span class="label">Least squares estimation &amp; method of moments</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="teal">
+      <div class="week-num">W05</div>
+      <div class="week-content">
+        <div class="week-date">20 Oct 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-AALec06.pdf"><span class="code">AA06</span><span class="label">Bayesian estimation</span></a></li>
+          <li><a href="Slides/COMS20017-AALec07.pdf"><span class="code">AA07</span><span class="label">MAP estimation examples</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="mute">
+      <div class="week-num">W06</div>
+      <div class="week-content">
+        <div class="week-date">27 Oct 2025 — reading week, no lectures</div>
+        <ul class="week-items">
+          <li><a href="ProblemSheets/ProblemSheet-AA01-Solutions.pdf"><span class="code">PS</span><span class="label">Parameter estimation — solutions</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="teal">
+      <div class="week-num">W07</div>
+      <div class="week-content">
+        <div class="week-date">3 Nov 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-AALec08.pdf"><span class="code">AA08</span><span class="label">Classification</span></a></li>
+          <li><a href="Slides/COMS20017-AALec09.pdf"><span class="code">AA09</span><span class="label">Regression</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-AA02.pdf"><span class="code">PS</span><span class="label">Problem sheet — classification &amp; regression</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-AA02-Solutions.pdf"><span class="code">PS</span><span class="label">Classification &amp; regression — solutions</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block-title">Features, and what to do with them <span class="who">— Majid</span></div>
+
+    <div class="week" data-accent="amber">
+      <div class="week-num">W08</div>
+      <div class="week-content">
+        <div class="week-date">10 Nov 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-MMLec04.pdf"><span class="code">MM04</span><span class="label">Signals, etc.</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-MM03.pdf"><span class="code">PS03</span><span class="label">Problem sheet (self/group study)</span></a></li>
+          <li><a href="Slides/COMS20017-MMLec05.pdf"><span class="code">MM05</span><span class="label">Fourier transforms</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-MM03-Solutions.pdf"><span class="code">PS03</span><span class="label">Problem sheet — solutions</span></a></li>
+          <li><a href="ProblemSheets/sines.py"><span class="code">.PY</span><span class="label">sines.py — code to play with</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="amber">
+      <div class="week-num">W09</div>
+      <div class="week-content">
+        <div class="week-date">17 Nov 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-MMLec06.pdf"><span class="code">MM06</span><span class="label">Features</span></a></li>
+          <li><a href="Slides/COMS20017-MMLec07.pdf"><span class="code">MM07</span><span class="label">PCA</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-MM04.pdf"><span class="code">PS04</span><span class="label">Problem sheet (self/group study)</span></a></li>
+          <li><a href="ProblemSheets/ProblemSheet-MM04-Solutions.pdf"><span class="code">PS04</span><span class="label">Problem sheet — solutions</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="amber">
+      <div class="week-num">W10</div>
+      <div class="week-content">
+        <div class="week-date">24 Nov 2025</div>
+        <ul class="week-items">
+          <li><a href="Slides/COMS20017-MMLec08.pdf"><span class="code">MM08</span><span class="label">Convolutions</span></a></li>
+          <li><a href="https://www.kahoot.it"><span class="code">MM09</span><span class="label">In‑class quiz, Thu 27 Nov — prizes for the top 3 scores</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="mute">
+      <div class="week-num">W11</div>
+      <div class="week-content">
+        <div class="week-date">1 Dec 2025</div>
+        <ul class="week-items">
+          <li class="note">Monday — Q&amp;A session with Majid, bring your questions</li>
+          <li class="note">Thursday — Q&amp;A session with Alin, bring your questions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="week" data-accent="mute">
+      <div class="week-num">W12</div>
+      <div class="week-content">
+        <div class="week-date">8 Dec 2025 — no lectures</div>
+        <ul class="week-items">
+          <li class="note">Ask questions on the unit's Teams channel if needed</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="papers" class="block">
+  <div class="section-head">
+    <h2 class="section-label">Past exam papers</h2>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Year</th><th>Paper</th><th>Answers</th><th>Ignore</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="year">22/23</td>
+        <td><a href="Past_Exams/main_2223.pdf">pdf</a></td>
+        <td><a href="Past_Exams/main_2223_answers.pdf">pdf</a></td>
+        <td class="ignore">Q2, 8, 14, 18</td>
+      </tr>
+      <tr>
+        <td class="year">23/24</td>
+        <td><a href="Past_Exams/main_2324.pdf">pdf</a></td>
+        <td><a href="Past_Exams/main_2324_answers.pdf">pdf</a></td>
+        <td class="ignore">Q14</td>
+      </tr>
+      <tr>
+        <td class="year">24/25</td>
+        <td><a href="Past_Exams/main_2425.pdf">pdf</a></td>
+        <td><a href="Past_Exams/main_2425_answers.pdf">pdf</a></td>
+        <td class="ignore">—</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <div class="foot-row">
+    <div>
+      <p class="eyebrow">COMS20017 · Algorithms &amp; Data — Data</p>
+      <p style="margin:2px 0 0; font-size:0.85rem; color:var(--ink-soft);">University of Bristol · TB1 2025/26</p>
+    </div>
+    <a class="repo-link" href="https://github.com/majidmirmehdi/COMS20017_DATA_25-26">github.com/majidmirmehdi/COMS20017_DATA_25-26 ↗</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const canvas = document.getElementById('wave');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w, h, dpr;
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = canvas.clientWidth;
+    h = canvas.clientHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const inkSoft = '#51606d';
+  const amber = '#a8702a';
+  const teal = '#3e6e68';
+
+  // Three component sine waves (nod to sampling/Fourier content) that sum into the bold composite line.
+  const components = [
+    { amp: 10, freq: 1,  color: inkSoft, alpha: 0.35, width: 1 },
+    { amp: 6,  freq: 3,  color: teal,    alpha: 0.4,  width: 1 },
+    { amp: 4,  freq: 5,  color: amber,   alpha: 0.4,  width: 1 }
+  ];
+
+  function sumAt(x, t){
+    const cx = (x / w) * Math.PI * 4;
+    let y = 0;
+    components.forEach(c => { y += c.amp * Math.sin(cx * c.freq + t); });
+    return y;
+  }
+
+  function drawWave(fn, color, alpha, lineWidth, t, midY){
+    ctx.beginPath();
+    for(let x = 0; x <= w; x += 4){
+      const y = midY + fn(x, t);
+      if(x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  function frame(t){
+    ctx.clearRect(0, 0, w, h);
+    const midY = h * 0.55;
+
+    components.forEach(c => {
+      drawWave((x, tt) => {
+        const cx = (x / w) * Math.PI * 4;
+        return c.amp * Math.sin(cx * c.freq + tt);
+      }, c.color, c.alpha, c.width, t, midY - 18);
+    });
+
+    // composite line
+    ctx.beginPath();
+    for(let x = 0; x <= w; x += 3){
+      const y = midY + 18 + sumAt(x, t) * 0.9;
+      if(x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#1C2B39';
+    ctx.globalAlpha = 0.85;
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  if(reduceMotion){
+    frame(0.6);
+  } else {
+    let start = null;
+    function loop(ts){
+      if(start === null) start = ts;
+      const t = (ts - start) / 1400;
+      frame(t);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
+
+</body>
+</html>
