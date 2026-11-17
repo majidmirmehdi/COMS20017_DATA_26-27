@@ -1,4 +1,4 @@
-# COMS20017_DATA_2025-26 Labs
+# COMS20017_DATA_2026-27 Labs
 
 The labs are all Jupyter Notebooks.  We recommend that you work at a lab machine, but we also give instructions for working remotely.
 
@@ -9,7 +9,7 @@ Start by cloning the lab sheet to the machine you're working at (usually the loc
 
 2. Clone the lab repository from Github to your lab machine.
 ```
-git clone https://github.com/majidmirmehdi/COMS20017_DATA_25-26.git
+git clone https://github.com/majidmirmehdi/COMS20017_DATA_26-27.git
 ```
 3. Pull the repository each time before the lab to get the latest updates of the repository.
 ```
